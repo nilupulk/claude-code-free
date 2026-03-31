@@ -1,0 +1,32 @@
+# Dependencies (rebuilt in container)
+node_modules
+
+# Git metadata
+.git
+.github
+.gitignore
+
+# Build output (rebuilt in container)
+dist
+
+# Env files — never bake secrets into the image
+.env
+.env.*
+
+# Logs and debug
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# Test artifacts
+coverage
+.nyc_output
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Docker context itself
+docker

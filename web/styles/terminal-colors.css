@@ -1,0 +1,80 @@
+/* =====================================================
+   TERMINAL COLORS — ANSI 16-color palette as CSS vars
+   Default palette: Tokyo Night
+   Override per theme under [data-terminal-theme="..."]
+   ===================================================== */
+
+:root {
+  /* ANSI standard colors */
+  --ansi-black:         #15161e;
+  --ansi-red:           #f7768e;
+  --ansi-green:         #9ece6a;
+  --ansi-yellow:        #e0af68;
+  --ansi-blue:          #7aa2f7;
+  --ansi-magenta:       #bb9af7;
+  --ansi-cyan:          #7dcfff;
+  --ansi-white:         #a9b1d6;
+
+  /* ANSI bright colors */
+  --ansi-bright-black:   #414868;
+  --ansi-bright-red:     #f7768e;
+  --ansi-bright-green:   #9ece6a;
+  --ansi-bright-yellow:  #e0af68;
+  --ansi-bright-blue:    #7aa2f7;
+  --ansi-bright-magenta: #bb9af7;
+  --ansi-bright-cyan:    #7dcfff;
+  --ansi-bright-white:   #c0caf5;
+
+  /* Terminal semantic colors */
+  --term-bg:             #1a1b26;
+  --term-bg-elevated:    #16161e;
+  --term-bg-selection:   rgba(122, 162, 247, 0.2);
+  --term-fg:             #c0caf5;
+  --term-fg-dim:         #565f89;
+  --term-cursor:         #c0caf5;
+  --term-cursor-text:    #1a1b26;
+
+  /* Chrome (title bar / frame) */
+  --term-chrome-bg:      #16161e;
+  --term-chrome-fg:      #565f89;
+  --term-chrome-border:  #1f2335;
+  --term-chrome-accent:  #7aa2f7;
+
+  /* Traffic lights */
+  --term-dot-close:      #f7768e;
+  --term-dot-min:        #e0af68;
+  --term-dot-max:        #9ece6a;
+
+  /* Glow color (used by phosphor effect) */
+  --term-glow-color:     rgba(122, 162, 247, 0.6);
+}
+
+/* ─── Utility classes: map ANSI to color/bg ───────────────────────────── */
+
+.ansi-black        { color: var(--ansi-black); }
+.ansi-red          { color: var(--ansi-red); }
+.ansi-green        { color: var(--ansi-green); }
+.ansi-yellow       { color: var(--ansi-yellow); }
+.ansi-blue         { color: var(--ansi-blue); }
+.ansi-magenta      { color: var(--ansi-magenta); }
+.ansi-cyan         { color: var(--ansi-cyan); }
+.ansi-white        { color: var(--ansi-white); }
+
+.ansi-bright-black   { color: var(--ansi-bright-black); }
+.ansi-bright-red     { color: var(--ansi-bright-red); }
+.ansi-bright-green   { color: var(--ansi-bright-green); }
+.ansi-bright-yellow  { color: var(--ansi-bright-yellow); }
+.ansi-bright-blue    { color: var(--ansi-bright-blue); }
+.ansi-bright-magenta { color: var(--ansi-bright-magenta); }
+.ansi-bright-cyan    { color: var(--ansi-bright-cyan); }
+.ansi-bright-white   { color: var(--ansi-bright-white); }
+
+.ansi-bg-black        { background-color: var(--ansi-black); }
+.ansi-bg-red          { background-color: var(--ansi-red); }
+.ansi-bg-green        { background-color: var(--ansi-green); }
+.ansi-bg-yellow       { background-color: var(--ansi-yellow); }
+.ansi-bg-blue         { background-color: var(--ansi-blue); }
+.ansi-bg-magenta      { background-color: var(--ansi-magenta); }
+.ansi-bg-cyan         { background-color: var(--ansi-cyan); }
+.ansi-bg-white        { background-color: var(--ansi-white); }
+.ansi-bg-bright-black { background-color: var(--ansi-bright-black); }

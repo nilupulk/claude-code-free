@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "America/New_York",
+  "schedule": ["every weekend"],
+
+  "packageRules": [
+    {
+      "description": "Auto-merge patch updates when CI passes",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "squash",
+      "automergeStrategy": "rebase"
+    },
+    {
+      "description": "Group minor updates into a single weekly PR",
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor dependencies",
+      "schedule": ["every monday"]
+    },
+    {
+      "description": "Major updates require manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major-update"]
+    },
+    {
+      "description": "Merge security fixes immediately",
+      "matchDepTypes": ["vulnerabilities"],
+      "schedule": ["at any time"],
+      "automerge": true,
+      "labels": ["security"]
+    },
+    {
+      "description": "Keep Next.js and React updates together",
+      "matchPackageNames": ["next", "react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "React / Next.js"
+    },
+    {
+      "description": "Group all Radix UI packages",
+      "matchPackagePrefixes": ["@radix-ui/"],
+      "groupName": "Radix UI"
+    },
+    {
+      "description": "Bun version managed separately",
+      "matchPackageNames": ["bun"],
+      "automerge": false
+    }
+  ],
+
+  "ignoreDeps": [],
+  "labels": ["dependencies"],
+  "prCreation": "immediate",
+  "rebaseWhen": "behind-base-branch",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dependency Dashboard"
+}

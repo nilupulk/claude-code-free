@@ -1,0 +1,149 @@
+# Default values for claude-code Helm chart.
+# Override with: helm install claude-code ./helm/claude-code -f my-values.yaml
+
+# ── Image ──────────────────────────────────────────────────────────────────────
+image:
+  repository: ghcr.io/anthropics/claude-code-web
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# ── Replica & Scaling ──────────────────────────────────────────────────────────
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Pod disruption budget — keep at least 1 pod running during rolling updates
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# ── Service Account ────────────────────────────────────────────────────────────
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# ── Pod configuration ──────────────────────────────────────────────────────────
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false   # PTY needs to write to /tmp
+  capabilities:
+    drop: ["ALL"]
+
+# ── Resources ──────────────────────────────────────────────────────────────────
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# ── Service ────────────────────────────────────────────────────────────────────
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+  annotations: {}
+
+# ── Ingress ────────────────────────────────────────────────────────────────────
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    # nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    # nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    # nginx.ingress.kubernetes.io/websocket-services: "claude-code"
+  hosts:
+    - host: claude.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: claude-tls
+  #   hosts:
+  #     - claude.example.com
+
+# ── Application configuration ──────────────────────────────────────────────────
+config:
+  # Auth provider: token | oauth | apikey
+  authProvider: token
+  # Maximum total concurrent sessions across all users
+  maxSessions: "50"
+  # Max concurrent sessions per user
+  maxSessionsPerUser: "5"
+  # Max new sessions per user per hour
+  maxSessionsPerHour: "20"
+  # Comma-separated allowed WebSocket origins (empty = allow all)
+  allowedOrigins: ""
+  # Optional model override
+  anthropicModel: ""
+  # Log level
+  nodeEnv: production
+
+# ── Secrets ────────────────────────────────────────────────────────────────────
+# Set these via --set or a separate sealed-secret / external-secrets resource.
+# NEVER commit real values here.
+secrets:
+  # Anthropic API key (required)
+  anthropicApiKey: ""
+  # Static auth token for token provider (optional)
+  authToken: ""
+  # Cookie/session signing key — generate with: openssl rand -hex 32
+  sessionSecret: ""
+  # Name of an existing secret to use instead of creating one
+  existingSecret: ""
+
+# ── Persistence ────────────────────────────────────────────────────────────────
+persistence:
+  enabled: true
+  # storageClass: ""   # leave empty to use cluster default
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  # Mount path inside the container
+  mountPath: /data
+
+# ── Probes ─────────────────────────────────────────────────────────────────────
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 20
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 3
+
+# ── Node selection ─────────────────────────────────────────────────────────────
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# ── Extra environment variables ────────────────────────────────────────────────
+extraEnv: []
+# - name: CLAUDE_CODE_SHELL
+#   value: /bin/bash

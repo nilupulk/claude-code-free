@@ -1,0 +1,103 @@
+/* =====================================================
+   TERMINAL BORDERS — Ink box-drawing → CSS borders
+   ===================================================== */
+
+/*
+  Ink borderStyle values → CSS:
+    "single"  ─│┌┐└┘
+    "double"  ═║╔╗╚╝
+    "round"   ─│╭╮╰╯   (same lines, rounded corners)
+    "bold"    ━┃┏┓┗┛
+    "classic" +-        (ASCII fallback)
+    "arrow"   ><^v
+*/
+
+/* ─── Single ──────────────────────────────────────── */
+.ink-border-single {
+  border: 1px solid var(--ansi-white);
+  border-radius: 0;
+}
+
+/* ─── Double ──────────────────────────────────────── */
+.ink-border-double {
+  border: 3px double var(--ansi-white);
+  border-radius: 0;
+}
+
+/* ─── Round ───────────────────────────────────────── */
+.ink-border-round {
+  border: 1px solid var(--ansi-white);
+  border-radius: 8px;
+}
+
+/* ─── Bold ────────────────────────────────────────── */
+.ink-border-bold {
+  border: 2px solid var(--ansi-white);
+  border-radius: 0;
+}
+
+/* ─── Classic (ASCII) ─────────────────────────────── */
+.ink-border-classic {
+  border: 1px solid var(--ansi-bright-black);
+  border-radius: 0;
+}
+
+/* ─── Color variants ──────────────────────────────── */
+
+.ink-border-red     { border-color: var(--ansi-red); }
+.ink-border-green   { border-color: var(--ansi-green); }
+.ink-border-yellow  { border-color: var(--ansi-yellow); }
+.ink-border-blue    { border-color: var(--ansi-blue); }
+.ink-border-magenta { border-color: var(--ansi-magenta); }
+.ink-border-cyan    { border-color: var(--ansi-cyan); }
+.ink-border-dim     { border-color: var(--ansi-bright-black); }
+
+/* ─── Padding mirrors Ink default (1 char on sides) ── */
+
+.ink-border-padded {
+  padding: 0 1ch;
+}
+
+.ink-border-padded-lg {
+  padding: 0.4lh 1ch;
+}
+
+/* ─── Divider lines ───────────────────────────────── */
+
+/* Horizontal rule (─────) */
+.terminal-hr {
+  border: none;
+  border-top: 1px solid var(--ansi-bright-black);
+  margin: 0.5lh 0;
+  opacity: 0.6;
+}
+
+/* Vertical divider (│) */
+.terminal-vr {
+  border: none;
+  border-left: 1px solid var(--ansi-bright-black);
+  align-self: stretch;
+  margin: 0 0.5ch;
+  opacity: 0.6;
+}
+
+/* ─── Panel / card variant ────────────────────────── */
+
+.terminal-panel {
+  border: 1px solid var(--ansi-bright-black);
+  border-radius: 0;
+  background-color: var(--term-bg-elevated);
+  padding: 0.5lh 1ch;
+}
+
+.terminal-panel--accent {
+  border-color: var(--term-chrome-accent);
+}
+
+/* ─── Focus ring (terminal style — no rounded) ──────── */
+
+.terminal-focus-ring:focus-visible {
+  outline: 1px solid var(--ansi-blue);
+  outline-offset: 1px;
+  border-radius: 0;
+}

@@ -1,0 +1,45 @@
+# Source files not needed for web deployment
+src/
+mcp-server/src/
+
+# Build artifacts
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Dev tooling
+.git/
+*.log
+*.tsbuildinfo
+
+# Local environment files
+.env.local
+.env.*.local
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Scripts (not needed at runtime)
+scripts/
+
+# Docs
+docs/
+*.md
+!web/**/*.md
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor config
+.vscode/
+.idea/
+
+# Web-specific build output (Vercel handles this)
+web/.next/
+web/node_modules/

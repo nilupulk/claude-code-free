@@ -1,0 +1,202 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Lint ──────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Biome check (src/)
+        run: bun run lint
+
+      - name: Install web dependencies
+        working-directory: web
+        run: bun install --frozen-lockfile
+
+      - name: ESLint (web/)
+        working-directory: web
+        run: bun run lint
+
+  # ── Type-check ────────────────────────────────────────────────────────────
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck root
+        run: bun run typecheck
+
+      - name: Install web dependencies
+        working-directory: web
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck web
+        working-directory: web
+        run: bun run type-check
+
+  # ── Security Audit ────────────────────────────────────────────────────────
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Audit root dependencies
+        run: bun audit --production
+        continue-on-error: true  # promote to required once baseline is clean
+
+      - name: Install web dependencies
+        working-directory: web
+        run: bun install --frozen-lockfile
+
+      - name: Audit web dependencies
+        working-directory: web
+        run: bun audit --production
+        continue-on-error: true
+
+  # ── Build Web ─────────────────────────────────────────────────────────────
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install web dependencies
+        working-directory: web
+        run: bun install --frozen-lockfile
+
+      - name: Build web app
+        run: bun run build:web
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-${{ github.sha }}
+          path: web/.next/
+          retention-days: 7
+
+  # ── Bundle Size Gate ──────────────────────────────────────────────────────
+  bundle-size:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    needs: [build-web]
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install web dependencies
+        working-directory: web
+        run: bun install --frozen-lockfile
+
+      - name: Check initial JS bundle < 150 KB gzipped
+        working-directory: web
+        run: |
+          BUNDLE_SIZE=$(find .next/static/chunks -name "*.js" -not -name "*.map" \
+            | xargs gzip -c 2>/dev/null | wc -c)
+          BUDGET_BYTES=153600
+          echo "Gzipped bundle size: ${BUNDLE_SIZE} bytes"
+          if [ "$BUNDLE_SIZE" -gt "$BUDGET_BYTES" ]; then
+            echo "::error::Bundle size ${BUNDLE_SIZE}B exceeds 150 KB budget (${BUDGET_BYTES}B)"
+            exit 1
+          fi
+
+  # ── Unit Tests (activate once test framework is added) ────────────────────
+  # unit-test:
+  #   name: Unit Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: oven-sh/setup-bun@v2
+  #       with: { bun-version: latest }
+  #     - run: bun install --frozen-lockfile
+  #     - run: bun run test:unit -- --coverage
+  #     - uses: codecov/codecov-action@v4
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+
+  # ── Integration Tests (activate once DB + test script exists) ─────────────
+  # integration-test:
+  #   name: Integration Tests
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     postgres:
+  #       image: postgres:16
+  #       env: { POSTGRES_PASSWORD: test, POSTGRES_DB: test }
+  #       ports: ['5432:5432']
+  #       options: >-
+  #         --health-cmd pg_isready
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: oven-sh/setup-bun@v2
+  #       with: { bun-version: latest }
+  #     - run: bun install --frozen-lockfile
+  #     - run: bun run test:integration
+  #       env:
+  #         DATABASE_URL: postgresql://postgres:test@localhost/test
+
+  # ── E2E Tests (activate once Playwright is installed) ─────────────────────
+  # e2e-test:
+  #   name: E2E Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: oven-sh/setup-bun@v2
+  #       with: { bun-version: latest }
+  #     - run: bun install --frozen-lockfile
+  #     - run: bunx playwright install --with-deps chromium
+  #     - run: bun run build:web
+  #     - run: bun run test:e2e
+  #     - uses: actions/upload-artifact@v4
+  #       if: failure()
+  #       with:
+  #         name: playwright-report
+  #         path: playwright-report/
+  #         retention-days: 7

@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Amber
+   Classic amber phosphor monitor aesthetic
+   ===================================================== */
+
+[data-terminal-theme="amber"] {
+  --ansi-black:          #1a0e00;
+  --ansi-red:            #cc6600;   /* map reds to orange-amber */
+  --ansi-green:          #cc8800;
+  --ansi-yellow:         #ffaa00;
+  --ansi-blue:           #aa7700;
+  --ansi-magenta:        #dd9900;
+  --ansi-cyan:           #bb8800;
+  --ansi-white:          #cc8800;
+
+  --ansi-bright-black:   #3d2200;
+  --ansi-bright-red:     #ffaa33;
+  --ansi-bright-green:   #ffcc00;
+  --ansi-bright-yellow:  #ffdd44;
+  --ansi-bright-blue:    #ddaa00;
+  --ansi-bright-magenta: #ffbb00;
+  --ansi-bright-cyan:    #eecc00;
+  --ansi-bright-white:   #ffdd88;
+
+  --term-bg:             #1a0e00;
+  --term-bg-elevated:    #120a00;
+  --term-bg-selection:   rgba(255, 170, 0, 0.2);
+  --term-fg:             #cc8800;
+  --term-fg-dim:         #5a3d00;
+  --term-cursor:         #ffaa00;
+  --term-cursor-text:    #1a0e00;
+
+  --term-chrome-bg:      #120a00;
+  --term-chrome-fg:      #5a3d00;
+  --term-chrome-border:  #2a1800;
+  --term-chrome-accent:  #cc8800;
+
+  --term-dot-close:      #663300;
+  --term-dot-min:        #996600;
+  --term-dot-max:        #cc8800;
+
+  --term-glow-color:     rgba(204, 136, 0, 0.65);
+}

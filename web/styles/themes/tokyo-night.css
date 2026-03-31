@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Tokyo Night (default)
+   Based on the Tokyo Night VS Code theme by enkia
+   ===================================================== */
+
+[data-terminal-theme="tokyo-night"] {
+  --ansi-black:          #15161e;
+  --ansi-red:            #f7768e;
+  --ansi-green:          #9ece6a;
+  --ansi-yellow:         #e0af68;
+  --ansi-blue:           #7aa2f7;
+  --ansi-magenta:        #bb9af7;
+  --ansi-cyan:           #7dcfff;
+  --ansi-white:          #a9b1d6;
+
+  --ansi-bright-black:   #414868;
+  --ansi-bright-red:     #f7768e;
+  --ansi-bright-green:   #9ece6a;
+  --ansi-bright-yellow:  #e0af68;
+  --ansi-bright-blue:    #7aa2f7;
+  --ansi-bright-magenta: #bb9af7;
+  --ansi-bright-cyan:    #7dcfff;
+  --ansi-bright-white:   #c0caf5;
+
+  --term-bg:             #1a1b26;
+  --term-bg-elevated:    #16161e;
+  --term-bg-selection:   rgba(122, 162, 247, 0.2);
+  --term-fg:             #c0caf5;
+  --term-fg-dim:         #565f89;
+  --term-cursor:         #c0caf5;
+  --term-cursor-text:    #1a1b26;
+
+  --term-chrome-bg:      #16161e;
+  --term-chrome-fg:      #565f89;
+  --term-chrome-border:  #1f2335;
+  --term-chrome-accent:  #7aa2f7;
+
+  --term-dot-close:      #f7768e;
+  --term-dot-min:        #e0af68;
+  --term-dot-max:        #9ece6a;
+
+  --term-glow-color:     rgba(122, 162, 247, 0.5);
+}

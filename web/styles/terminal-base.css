@@ -1,0 +1,89 @@
+/* =====================================================
+   TERMINAL BASE — Font, grid, scrollbar, selection
+   ===================================================== */
+
+/* ─── Font ────────────────────────────────────────── */
+
+.terminal-root,
+.terminal-root * {
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", "Fira Code",
+    ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+  font-variant-ligatures: contextual;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ─── Terminal viewport ───────────────────────────── */
+
+.terminal-root {
+  background-color: var(--term-bg);
+  color: var(--term-fg);
+  line-height: 1.5;
+  font-size: 13px;
+
+  /* Character-grid alignment */
+  tab-size: 4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ─── Selection ───────────────────────────────────── */
+
+.terminal-root ::selection {
+  background-color: var(--term-bg-selection);
+  color: inherit;
+}
+
+/* ─── Scrollbar ───────────────────────────────────── */
+
+.terminal-root ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+.terminal-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-root ::-webkit-scrollbar-thumb {
+  background: var(--ansi-bright-black);
+  border-radius: 4px;
+}
+
+.terminal-root ::-webkit-scrollbar-thumb:hover {
+  background: var(--ansi-white);
+}
+
+/* ─── Preformatted content ────────────────────────── */
+
+.terminal-root pre,
+.terminal-root code {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+}
+
+/* ─── Ink Box compatibility ───────────────────────── */
+
+.terminal-root .ink-box {
+  display: flex;
+}
+
+.terminal-root .ink-box--column {
+  flex-direction: column;
+}
+
+.terminal-root .ink-box--row {
+  flex-direction: row;
+}
+
+/* Ink Text bold / italic / underline / strikethrough */
+.terminal-bold      { font-weight: bold; }
+.terminal-italic    { font-style: italic; }
+.terminal-underline { text-decoration: underline; }
+.terminal-strikethrough { text-decoration: line-through; }
+.terminal-dim       { opacity: 0.5; }
+.terminal-inverse   { filter: invert(1); }

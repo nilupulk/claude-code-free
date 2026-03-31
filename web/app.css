@@ -1,0 +1,127 @@
+/**
+ * app.css — global stylesheet for the Vite entry point.
+ *
+ * Import order matters:
+ *  1. Tailwind directives (base resets + utility classes)
+ *  2. Terminal-specific colour variables and font faces
+ *
+ * When building with Next.js use web/app/globals.css instead.
+ * This file is the equivalent entry for the Vite build path.
+ */
+
+/* Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Font faces ──────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── CSS custom properties (design tokens) ───────────────────────────────── */
+
+@layer base {
+  :root {
+    /* Backgrounds */
+    --color-bg-primary: #09090b;
+    --color-bg-secondary: #18181b;
+    --color-bg-elevated: #27272a;
+
+    /* Text */
+    --color-text-primary: #fafafa;
+    --color-text-secondary: #a1a1aa;
+    --color-text-muted: #52525b;
+
+    /* Accent (brand purple) */
+    --color-accent: #8b5cf6;
+    --color-accent-hover: #7c3aed;
+    --color-accent-active: #6d28d9;
+    --color-accent-foreground: #ffffff;
+
+    /* Borders */
+    --color-border: #27272a;
+    --color-border-hover: #3f3f46;
+
+    /* Status colours */
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+
+    /* Terminal font stack */
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Monaco,
+      Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+
+  /* ── Base resets ─────────────────────────────────────────────────────── */
+
+  html {
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Remove default list styles when inside nav/menu contexts */
+  [role='list'] {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Scrollbar styling — matches terminal.css */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
+
+  /* Selection colour */
+  ::selection {
+    background: rgba(139, 92, 246, 0.35);
+    color: inherit;
+  }
+
+  /* Pulse keyframe used by ConnectionStatusBanner */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+}

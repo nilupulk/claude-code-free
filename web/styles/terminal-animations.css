@@ -1,0 +1,177 @@
+/* =====================================================
+   TERMINAL ANIMATIONS — cursor, spinner, typewriter
+   All respect prefers-reduced-motion
+   ===================================================== */
+
+/* ─── Keyframes ───────────────────────────────────── */
+
+@keyframes terminal-blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes terminal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes terminal-slide-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Typewriter: reveal text by animating clip-path width */
+@keyframes terminal-typewriter {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
+/* Spinner frames — rotated through via step animation */
+@keyframes terminal-spinner-rotate {
+  0%   { content: "⠋"; }
+  10%  { content: "⠙"; }
+  20%  { content: "⠹"; }
+  30%  { content: "⠸"; }
+  40%  { content: "⠼"; }
+  50%  { content: "⠴"; }
+  60%  { content: "⠦"; }
+  70%  { content: "⠧"; }
+  80%  { content: "⠇"; }
+  90%  { content: "⠏"; }
+  100% { content: "⠋"; }
+}
+
+@keyframes terminal-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes terminal-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* Panel open/close */
+@keyframes terminal-panel-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes terminal-panel-close {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
+/* Boot sequence — scanline sweep */
+@keyframes terminal-boot-sweep {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(100%); }
+}
+
+/* ─── Cursor ──────────────────────────────────────── */
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1.1em;
+  background-color: var(--term-cursor);
+  vertical-align: text-bottom;
+  animation: terminal-blink 1.06s step-end infinite;
+  border-radius: 0;
+}
+
+/* Beam / ibeam cursor variant */
+.terminal-cursor--beam {
+  width: 2px;
+  border-radius: 1px;
+}
+
+/* Underline cursor variant */
+.terminal-cursor--underline {
+  width: 1ch;
+  height: 2px;
+  vertical-align: baseline;
+  margin-bottom: -2px;
+}
+
+/* ─── Spinner ─────────────────────────────────────── */
+
+/* CSS-only spinner using ::before pseudo-element */
+.terminal-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  color: var(--ansi-blue);
+}
+
+.terminal-spinner::before {
+  content: "⠋";
+  display: inline-block;
+  animation: terminal-spinner-rotate 800ms steps(10, end) infinite;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  line-height: 1;
+}
+
+.terminal-spinner--yellow { color: var(--ansi-yellow); }
+.terminal-spinner--green  { color: var(--ansi-green); }
+.terminal-spinner--red    { color: var(--ansi-red); }
+.terminal-spinner--dim    { color: var(--term-fg-dim); }
+
+/* ─── Typewriter ──────────────────────────────────── */
+
+.terminal-typewriter {
+  display: inline-block;
+  animation: terminal-typewriter 600ms steps(40, end) both;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Slower reveal for headers */
+.terminal-typewriter--slow {
+  animation-duration: 1200ms;
+}
+
+/* ─── Fade / slide in ─────────────────────────────── */
+
+.terminal-fade-in {
+  animation: terminal-fade-in 200ms ease both;
+}
+
+.terminal-slide-in {
+  animation: terminal-slide-in 200ms ease both;
+}
+
+/* Stagger children */
+.terminal-stagger > * {
+  animation: terminal-slide-in 200ms ease both;
+}
+
+.terminal-stagger > *:nth-child(1)  { animation-delay:   0ms; }
+.terminal-stagger > *:nth-child(2)  { animation-delay:  40ms; }
+.terminal-stagger > *:nth-child(3)  { animation-delay:  80ms; }
+.terminal-stagger > *:nth-child(4)  { animation-delay: 120ms; }
+.terminal-stagger > *:nth-child(5)  { animation-delay: 160ms; }
+.terminal-stagger > *:nth-child(6)  { animation-delay: 200ms; }
+
+/* Panel transitions */
+.terminal-panel-open  { animation: terminal-panel-open  200ms ease both; }
+.terminal-panel-close { animation: terminal-panel-close 150ms ease both; }
+
+/* ─── Reduced motion overrides ────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor,
+  .terminal-spinner::before,
+  .terminal-typewriter,
+  .terminal-fade-in,
+  .terminal-slide-in,
+  .terminal-panel-open,
+  .terminal-panel-close,
+  .terminal-stagger > * {
+    animation: none !important;
+    transition: none !important;
+    /* Ensure end-state is still visible */
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+  }
+}

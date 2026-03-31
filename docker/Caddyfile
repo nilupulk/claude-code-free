@@ -1,0 +1,62 @@
+# Caddy reverse proxy for Claude Web Terminal
+#
+# Handles:
+#   - Automatic TLS via Let's Encrypt (just set your domain)
+#   - HTTP/2 + HTTP/3
+#   - WebSocket proxying (required for the PTY terminal)
+#   - SSE proxying (required for streaming responses)
+#   - Compression
+#
+# Usage with docker-compose.prod.yml:
+#   The DOMAIN env var is interpolated by Caddy at startup.
+#
+# Usage standalone (replace {$DOMAIN} with your actual domain):
+#   caddy run --config Caddyfile
+# ─────────────────────────────────────────────────────────────
+
+{$DOMAIN} {
+    # Reverse proxy to the claude-web container
+    reverse_proxy claude-web:3000 {
+        # Forward real client IP so the server can rate-limit by IP
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # Required for WebSocket upgrades (PTY terminal)
+        # Caddy handles the Upgrade header automatically — no extra config needed.
+
+        # Flush responses immediately (required for SSE streaming)
+        flush_interval -1
+
+        # Health checks: Caddy marks the backend unhealthy if /health/live fails
+        health_uri /health/live
+        health_interval 20s
+        health_timeout 5s
+    }
+
+    # Enable gzip/zstd compression for text assets
+    encode zstd gzip
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        # Remove server fingerprinting
+        -Server
+    }
+
+    # Logging
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+}
+
+# Redirect bare HTTP → HTTPS (Caddy does this automatically for HTTPS sites,
+# but explicit is clearer for operators reading this file)
+http://{$DOMAIN} {
+    redir https://{$DOMAIN}{uri} permanent
+}

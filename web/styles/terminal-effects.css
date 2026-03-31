@@ -1,0 +1,132 @@
+/* =====================================================
+   TERMINAL EFFECTS — Optional CRT / retro effects
+   Enabled via data attributes on .terminal-window:
+     data-effect-scanlines
+     data-effect-glow
+     data-effect-flicker
+     data-effect-curvature
+   All effects respect prefers-reduced-motion
+   ===================================================== */
+
+/* ─── Scanlines ───────────────────────────────────── */
+
+.terminal-window[data-effect-scanlines]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 1px,
+    rgba(0, 0, 0, 0.07) 1px,
+    rgba(0, 0, 0, 0.07) 2px
+  );
+
+  border-radius: inherit;
+}
+
+/* ─── Phosphor glow ───────────────────────────────── */
+
+.terminal-window[data-effect-glow] .terminal-root {
+  text-shadow:
+    0 0 6px var(--term-glow-color),
+    0 0 12px var(--term-glow-color);
+}
+
+/* Dimmer glow for non-primary text */
+.terminal-window[data-effect-glow] .terminal-root .ansi-white,
+.terminal-window[data-effect-glow] .terminal-root .ansi-bright-black {
+  text-shadow:
+    0 0 4px var(--term-glow-color);
+}
+
+/* Window-level glow on borders */
+.terminal-window[data-effect-glow] {
+  box-shadow:
+    0 0 0 1px var(--term-chrome-border),
+    0 0 30px rgba(0, 0, 0, 0.8),
+    inset 0 0 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px var(--term-glow-color);
+}
+
+/* ─── CRT curvature (barrel distortion) ──────────── */
+
+.terminal-window[data-effect-curvature] .terminal-body {
+  border-radius: 4px;
+  /* Approximate barrel distortion with CSS perspective */
+  perspective: 800px;
+}
+
+.terminal-window[data-effect-curvature] .terminal-root {
+  transform: perspective(600px) rotateX(0.4deg) rotateY(0deg) scaleX(0.998);
+}
+
+/* ─── Flicker ─────────────────────────────────────── */
+
+@keyframes terminal-flicker {
+  0%   { opacity: 1; }
+  3%   { opacity: 0.97; }
+  6%   { opacity: 1; }
+  63%  { opacity: 1; }
+  65%  { opacity: 0.94; }
+  68%  { opacity: 1; }
+  91%  { opacity: 1; }
+  93%  { opacity: 0.98; }
+  100% { opacity: 1; }
+}
+
+.terminal-window[data-effect-flicker] .terminal-root {
+  animation: terminal-flicker 8s linear infinite;
+}
+
+/* ─── Boot sequence overlay ───────────────────────── */
+
+.terminal-boot-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--term-bg);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 32px;
+  animation: terminal-boot-fade-out 400ms ease 2400ms forwards;
+}
+
+@keyframes terminal-boot-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; pointer-events: none; }
+}
+
+.terminal-boot-line {
+  color: var(--ansi-green);
+  font-size: 12px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  animation: terminal-fade-in 80ms ease both;
+  line-height: 1.6;
+}
+
+/* ─── Reduced motion: disable all effects ─────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-window[data-effect-flicker] .terminal-root {
+    animation: none;
+  }
+
+  .terminal-window[data-effect-glow] .terminal-root {
+    text-shadow: none;
+  }
+
+  .terminal-window[data-effect-curvature] .terminal-root {
+    transform: none;
+  }
+
+  .terminal-boot-overlay {
+    animation: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+}

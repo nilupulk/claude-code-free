@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code — Admin</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --red: #f85149;
+      --red-bg: rgba(248, 81, 73, 0.1);
+      --red-border: rgba(248, 81, 73, 0.4);
+      --green: #3fb950;
+      --code-bg: #21262d;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8fa;
+        --surface: #ffffff;
+        --border: #d0d7de;
+        --text: #1f2328;
+        --muted: #656d76;
+        --accent: #0969da;
+        --red: #d1242f;
+        --red-bg: rgba(209, 36, 47, 0.1);
+        --red-border: rgba(209, 36, 47, 0.4);
+        --green: #1a7f37;
+        --code-bg: #eaeef2;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-left h1 { font-size: 1.4rem; font-weight: 600; }
+    .header-left p { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+
+    .header-right { display: flex; gap: 0.5rem; }
+
+    button {
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+    .btn-danger {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+      color: var(--red);
+    }
+    .btn-danger:hover { filter: brightness(1.2); }
+
+    section { margin-bottom: 2.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .count-badge {
+      background: var(--code-bg);
+      color: var(--muted);
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+
+    td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--surface);
+    }
+
+    tr:hover td { background: var(--surface); }
+
+    code {
+      background: var(--code-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.8rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      background: var(--code-bg);
+      color: var(--muted);
+    }
+
+    .pill.live {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--green);
+    }
+
+    .empty-row td {
+      color: var(--muted);
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    #status-msg {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    #status-msg.visible { opacity: 1; }
+    #status-msg.error { border-color: var(--red-border); color: var(--red); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>Admin Dashboard</h1>
+      <p>Claude Code — multi-user session management</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-secondary" onclick="load()">&#8635; Refresh</button>
+      <form method="POST" action="/auth/logout" style="display:inline">
+        <button class="btn-secondary" type="submit">Sign out</button>
+      </form>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-header">
+      <h2>Connected Users</h2>
+      <span class="count-badge" id="user-count">0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Email / Name</th>
+          <th>Sessions</th>
+          <th>First seen</th>
+          <th>Last seen</th>
+        </tr>
+      </thead>
+      <tbody id="users-body">
+        <tr class="empty-row"><td colspan="5">Loading…</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <h2>Active Sessions</h2>
+      <span class="count-badge" id="session-count">0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Session ID</th>
+          <th>User</th>
+          <th>Age</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="sessions-body">
+        <tr class="empty-row"><td colspan="4">Loading…</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div id="status-msg"></div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function fmtAge(ms) {
+      if (ms < 60_000) return `${Math.round(ms / 1000)}s`;
+      if (ms < 3_600_000) return `${Math.round(ms / 60_000)}m`;
+      return `${(ms / 3_600_000).toFixed(1)}h`;
+    }
+
+    function fmtTime(ts) {
+      return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function showMsg(text, isError = false) {
+      const el = $('status-msg');
+      el.textContent = text;
+      el.className = 'visible' + (isError ? ' error' : '');
+      setTimeout(() => el.className = '', 3000);
+    }
+
+    async function load() {
+      try {
+        const [{ users }, { sessions }] = await Promise.all([
+          fetch('/admin/users').then((r) => r.json()),
+          fetch('/admin/sessions').then((r) => r.json()),
+        ]);
+
+        $('user-count').textContent = users.length;
+        $('session-count').textContent = sessions.length;
+
+        $('users-body').innerHTML = users.length === 0
+          ? '<tr class="empty-row"><td colspan="5">No connected users</td></tr>'
+          : users.map((u) => `
+            <tr>
+              <td><code>${u.id}</code></td>
+              <td>${u.email ? `<code>${u.email}</code>` : u.name ? u.name : '<span style="color:var(--muted)">—</span>'}</td>
+              <td><span class="pill">${u.sessionCount}</span></td>
+              <td>${fmtTime(u.firstSeenAt)}</td>
+              <td>${fmtTime(u.lastSeenAt)}</td>
+            </tr>`).join('');
+
+        $('sessions-body').innerHTML = sessions.length === 0
+          ? '<tr class="empty-row"><td colspan="4">No active sessions</td></tr>'
+          : sessions.map((s) => `
+            <tr>
+              <td><code>${s.id.slice(0, 8)}…</code></td>
+              <td><code>${s.userId}</code></td>
+              <td>${fmtAge(s.ageMs)}</td>
+              <td>
+                <button class="btn-danger" onclick="killSession('${s.id}')">Kill</button>
+              </td>
+            </tr>`).join('');
+      } catch (err) {
+        showMsg(`Failed to load data: ${err.message}`, true);
+      }
+    }
+
+    async function killSession(id) {
+      if (!confirm(`Kill session ${id.slice(0, 8)}…?\nThis will terminate the Claude Code process.`)) return;
+      try {
+        const r = await fetch(`/admin/sessions/${id}`, { method: 'DELETE' });
+        const j = await r.json();
+        if (j.ok) {
+          showMsg(`Session ${id.slice(0, 8)}… destroyed.`);
+          load();
+        } else {
+          showMsg(j.error ?? 'Unknown error', true);
+        }
+      } catch (err) {
+        showMsg(err.message, true);
+      }
+    }
+
+    load();
+    setInterval(load, 10_000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+# Claude Web Terminal — Simple Single-Service Deployment
+#
+# Ideal for: local development, single-user self-hosting, NAS, home server.
+#
+# Quick start:
+#   echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
+#   docker compose -f docker/docker-compose.yml up -d
+#
+# Then open http://localhost:3000
+# ─────────────────────────────────────────────────────────────
+
+services:
+  claude-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.all-in-one
+    image: claude-web:latest
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      # ── Required ────────────────────────────────────────────
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # ── Auth ────────────────────────────────────────────────
+      # AUTH_PROVIDER: token (default) | oauth | apikey
+      - AUTH_PROVIDER=${AUTH_PROVIDER:-token}
+      # Optional static token — if unset, no auth is enforced
+      - AUTH_TOKEN=${AUTH_TOKEN:-}
+      # ── Capacity ────────────────────────────────────────────
+      - MAX_SESSIONS=${MAX_SESSIONS:-10}
+      - MAX_SESSIONS_PER_USER=${MAX_SESSIONS_PER_USER:-3}
+      - MAX_SESSIONS_PER_HOUR=${MAX_SESSIONS_PER_HOUR:-10}
+      # ── Network ─────────────────────────────────────────────
+      # Comma-separated list of allowed CORS origins (empty = all)
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+      # ── Model (optional overrides) ──────────────────────────
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
+    volumes:
+      # All persistent data: sessions, user config, scrollback
+      - claude-data:/data
+    tmpfs:
+      # PTY temp files — no persistence needed
+      - /tmp:mode=1777
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health/live"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  claude-data:
+    driver: local

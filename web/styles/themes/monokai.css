@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Monokai
+   Classic code-editor palette by Wimer Hazenberg
+   ===================================================== */
+
+[data-terminal-theme="monokai"] {
+  --ansi-black:          #272822;
+  --ansi-red:            #f92672;
+  --ansi-green:          #a6e22e;
+  --ansi-yellow:         #f4bf75;
+  --ansi-blue:           #66d9e8;
+  --ansi-magenta:        #ae81ff;
+  --ansi-cyan:           #a1efe4;
+  --ansi-white:          #f8f8f2;
+
+  --ansi-bright-black:   #75715e;
+  --ansi-bright-red:     #f92672;
+  --ansi-bright-green:   #a6e22e;
+  --ansi-bright-yellow:  #f4bf75;
+  --ansi-bright-blue:    #66d9e8;
+  --ansi-bright-magenta: #ae81ff;
+  --ansi-bright-cyan:    #a1efe4;
+  --ansi-bright-white:   #f9f8f5;
+
+  --term-bg:             #272822;
+  --term-bg-elevated:    #1e1f1c;
+  --term-bg-selection:   rgba(174, 129, 255, 0.25);
+  --term-fg:             #f8f8f2;
+  --term-fg-dim:         #75715e;
+  --term-cursor:         #f8f8f0;
+  --term-cursor-text:    #272822;
+
+  --term-chrome-bg:      #1e1f1c;
+  --term-chrome-fg:      #75715e;
+  --term-chrome-border:  #3e3d32;
+  --term-chrome-accent:  #a6e22e;
+
+  --term-dot-close:      #f92672;
+  --term-dot-min:        #f4bf75;
+  --term-dot-max:        #a6e22e;
+
+  --term-glow-color:     rgba(166, 226, 46, 0.35);
+}

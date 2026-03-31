@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "claude-code.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "claude-code.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.config.nodeEnv | quote }}
+  AUTH_PROVIDER: {{ .Values.config.authProvider | quote }}
+  MAX_SESSIONS: {{ .Values.config.maxSessions | quote }}
+  MAX_SESSIONS_PER_USER: {{ .Values.config.maxSessionsPerUser | quote }}
+  MAX_SESSIONS_PER_HOUR: {{ .Values.config.maxSessionsPerHour | quote }}
+  ALLOWED_ORIGINS: {{ .Values.config.allowedOrigins | quote }}
+  {{- if .Values.config.anthropicModel }}
+  ANTHROPIC_MODEL: {{ .Values.config.anthropicModel | quote }}
+  {{- end }}
+  PORT: "3000"
+  CLAUDE_BIN: "claude"

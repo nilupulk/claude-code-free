@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Dracula
+   Based on the Dracula theme by Zeno Rocha
+   ===================================================== */
+
+[data-terminal-theme="dracula"] {
+  --ansi-black:          #21222c;
+  --ansi-red:            #ff5555;
+  --ansi-green:          #50fa7b;
+  --ansi-yellow:         #f1fa8c;
+  --ansi-blue:           #6272a4;
+  --ansi-magenta:        #ff79c6;
+  --ansi-cyan:           #8be9fd;
+  --ansi-white:          #f8f8f2;
+
+  --ansi-bright-black:   #6272a4;
+  --ansi-bright-red:     #ff6e6e;
+  --ansi-bright-green:   #69ff94;
+  --ansi-bright-yellow:  #ffffa5;
+  --ansi-bright-blue:    #d6acff;
+  --ansi-bright-magenta: #ff92df;
+  --ansi-bright-cyan:    #a4ffff;
+  --ansi-bright-white:   #ffffff;
+
+  --term-bg:             #282a36;
+  --term-bg-elevated:    #21222c;
+  --term-bg-selection:   rgba(68, 71, 90, 0.6);
+  --term-fg:             #f8f8f2;
+  --term-fg-dim:         #6272a4;
+  --term-cursor:         #f8f8f2;
+  --term-cursor-text:    #282a36;
+
+  --term-chrome-bg:      #21222c;
+  --term-chrome-fg:      #6272a4;
+  --term-chrome-border:  #44475a;
+  --term-chrome-accent:  #bd93f9;
+
+  --term-dot-close:      #ff5555;
+  --term-dot-min:        #f1fa8c;
+  --term-dot-max:        #50fa7b;
+
+  --term-glow-color:     rgba(189, 147, 249, 0.5);
+}

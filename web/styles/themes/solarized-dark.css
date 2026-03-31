@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Solarized Dark
+   Based on Solarized by Ethan Schoonover
+   ===================================================== */
+
+[data-terminal-theme="solarized-dark"] {
+  --ansi-black:          #073642;
+  --ansi-red:            #dc322f;
+  --ansi-green:          #859900;
+  --ansi-yellow:         #b58900;
+  --ansi-blue:           #268bd2;
+  --ansi-magenta:        #d33682;
+  --ansi-cyan:           #2aa198;
+  --ansi-white:          #eee8d5;
+
+  --ansi-bright-black:   #002b36;
+  --ansi-bright-red:     #cb4b16;
+  --ansi-bright-green:   #586e75;
+  --ansi-bright-yellow:  #657b83;
+  --ansi-bright-blue:    #839496;
+  --ansi-bright-magenta: #6c71c4;
+  --ansi-bright-cyan:    #93a1a1;
+  --ansi-bright-white:   #fdf6e3;
+
+  --term-bg:             #002b36;
+  --term-bg-elevated:    #073642;
+  --term-bg-selection:   rgba(38, 139, 210, 0.2);
+  --term-fg:             #839496;
+  --term-fg-dim:         #586e75;
+  --term-cursor:         #839496;
+  --term-cursor-text:    #002b36;
+
+  --term-chrome-bg:      #073642;
+  --term-chrome-fg:      #586e75;
+  --term-chrome-border:  #094555;
+  --term-chrome-accent:  #268bd2;
+
+  --term-dot-close:      #dc322f;
+  --term-dot-min:        #b58900;
+  --term-dot-max:        #859900;
+
+  --term-glow-color:     rgba(38, 139, 210, 0.4);
+}

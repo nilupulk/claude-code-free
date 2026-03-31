@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090f" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+
+  <title>Claude Code</title>
+  <meta name="description" content="Claude Code — AI-powered development assistant" />
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Claude Code" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <!--
+    Preload the monospace font used by all terminal-rendered text.
+    The actual @font-face declaration lives in terminal.css / globals.css.
+  -->
+  <link
+    rel="preload"
+    href="/fonts/JetBrainsMono-Regular.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="preload"
+    href="/fonts/JetBrainsMono-Medium.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  />
+
+  <!--
+    Terminal base styles (colour variables, scrollbar, selection colours).
+    Loaded early so there is no flash of unstyled content.
+  -->
+  <link rel="stylesheet" href="/styles/terminal.css" />
+</head>
+<body>
+  <!--
+    Mount point for the React application.
+    The Vite entry (app.tsx) calls ReactDOM.createRoot(document.getElementById('root'))
+    and renders <WebApp /> into this element.
+  -->
+  <div id="root"></div>
+
+  <!--
+    ES module entry — Vite replaces this path with the hashed bundle URL at
+    build time.  In dev mode Vite's plugin-react HMR runtime is injected
+    automatically before this script runs.
+  -->
+  <script type="module" src="/app.tsx"></script>
+</body>
+</html>

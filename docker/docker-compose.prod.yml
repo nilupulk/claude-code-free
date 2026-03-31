@@ -1,0 +1,104 @@
+# Claude Web Terminal — Production Multi-Service Deployment
+#
+# Includes:
+#   - claude-web  : the PTY terminal server
+#   - caddy       : TLS-terminating reverse proxy (auto HTTPS via Let's Encrypt)
+#
+# Quick start:
+#   cp .env.example .env && $EDITOR .env
+#   docker compose -f docker/docker-compose.prod.yml up -d
+#
+# Required .env variables:
+#   ANTHROPIC_API_KEY=sk-ant-...
+#   DOMAIN=claude.example.com          # your public domain
+#   SESSION_SECRET=<random-64-chars>   # cookie signing key
+#   AUTH_TOKEN=<strong-password>       # or use AUTH_PROVIDER=oauth
+# ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Claude Web Terminal ──────────────────────────────────────
+  claude-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.all-in-one
+    image: claude-web:latest
+    expose:
+      - "3000"
+    environment:
+      # ── Required ──────────────────────────────────────────
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # ── Auth ──────────────────────────────────────────────
+      - AUTH_PROVIDER=${AUTH_PROVIDER:-token}
+      - AUTH_TOKEN=${AUTH_TOKEN:-}
+      - SESSION_SECRET=${SESSION_SECRET}
+      # ── Capacity ──────────────────────────────────────────
+      - MAX_SESSIONS=${MAX_SESSIONS:-50}
+      - MAX_SESSIONS_PER_USER=${MAX_SESSIONS_PER_USER:-5}
+      - MAX_SESSIONS_PER_HOUR=${MAX_SESSIONS_PER_HOUR:-20}
+      # ── Network ───────────────────────────────────────────
+      - ALLOWED_ORIGINS=https://${DOMAIN}
+      # ── Model ─────────────────────────────────────────────
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-}
+    volumes:
+      - claude-data:/data
+    tmpfs:
+      - /tmp:mode=1777
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - internal
+      - proxy
+
+  # ── Caddy Reverse Proxy (auto TLS) ──────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    environment:
+      - DOMAIN=${DOMAIN}
+    depends_on:
+      claude-web:
+        condition: service_healthy
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
+    networks:
+      - proxy
+
+networks:
+  internal:
+    internal: true
+  proxy:
+
+volumes:
+  claude-data:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local

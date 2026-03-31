@@ -1,0 +1,22 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    uid: prometheus
+    url: ${PROMETHEUS_URL:-http://prometheus:9090}
+    isDefault: true
+    editable: false
+    jsonData:
+      timeInterval: "15s"
+      httpMethod: POST
+
+  - name: Loki
+    type: loki
+    access: proxy
+    uid: loki
+    url: ${LOKI_URL:-http://loki:3100}
+    editable: false
+    jsonData:
+      maxLines: 1000

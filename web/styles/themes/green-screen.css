@@ -1,0 +1,43 @@
+/* =====================================================
+   THEME: Green Screen
+   Classic phosphor green-on-black terminal
+   ===================================================== */
+
+[data-terminal-theme="green-screen"] {
+  --ansi-black:          #001100;
+  --ansi-red:            #22bb22;  /* no red; map to dim green */
+  --ansi-green:          #00cc00;
+  --ansi-yellow:         #33ff33;
+  --ansi-blue:           #00aa00;
+  --ansi-magenta:        #00ff00;
+  --ansi-cyan:           #00dd00;
+  --ansi-white:          #00cc00;
+
+  --ansi-bright-black:   #003300;
+  --ansi-bright-red:     #33ff33;
+  --ansi-bright-green:   #00ff00;
+  --ansi-bright-yellow:  #55ff55;
+  --ansi-bright-blue:    #00dd00;
+  --ansi-bright-magenta: #00ff00;
+  --ansi-bright-cyan:    #44ff44;
+  --ansi-bright-white:   #88ff88;
+
+  --term-bg:             #001100;
+  --term-bg-elevated:    #000d00;
+  --term-bg-selection:   rgba(0, 204, 0, 0.25);
+  --term-fg:             #00cc00;
+  --term-fg-dim:         #004400;
+  --term-cursor:         #00ff00;
+  --term-cursor-text:    #001100;
+
+  --term-chrome-bg:      #000d00;
+  --term-chrome-fg:      #004d00;
+  --term-chrome-border:  #003300;
+  --term-chrome-accent:  #00cc00;
+
+  --term-dot-close:      #005500;
+  --term-dot-min:        #007700;
+  --term-dot-max:        #00aa00;
+
+  --term-glow-color:     rgba(0, 200, 0, 0.7);
+}

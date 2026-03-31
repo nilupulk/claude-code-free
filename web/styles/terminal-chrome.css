@@ -1,0 +1,196 @@
+/* =====================================================
+   TERMINAL CHROME — Window frame & title bar
+   ===================================================== */
+
+/* ─── Outer window frame ──────────────────────────── */
+
+.terminal-window {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--term-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px var(--term-chrome-border),
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    0 8px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+/* Full-screen / embedded variant (no rounded corners, no shadow) */
+.terminal-window--embedded {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ─── Title bar ───────────────────────────────────── */
+
+.terminal-title-bar {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  background-color: var(--term-chrome-bg);
+  border-bottom: 1px solid var(--term-chrome-border);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Traffic lights */
+.terminal-traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: relative;
+  cursor: default;
+  transition: filter 150ms ease;
+}
+
+.terminal-dot--close  { background-color: var(--term-dot-close); }
+.terminal-dot--min    { background-color: var(--term-dot-min); }
+.terminal-dot--max    { background-color: var(--term-dot-max); }
+
+/* Show symbols on hover */
+.terminal-traffic-lights:hover .terminal-dot--close::after  { content: "×"; }
+.terminal-traffic-lights:hover .terminal-dot--min::after    { content: "−"; }
+.terminal-traffic-lights:hover .terminal-dot--max::after    { content: "+"; }
+
+.terminal-dot::after {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: system-ui, sans-serif;
+}
+
+/* Title text */
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: var(--term-chrome-fg);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Right-side status area */
+.terminal-title-status {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--term-chrome-fg);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* Online / offline dot */
+.terminal-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ansi-green);
+  animation: terminal-status-pulse 3s ease-in-out infinite;
+}
+
+.terminal-status-dot--offline {
+  background-color: var(--ansi-bright-black);
+  animation: none;
+}
+
+/* ─── Tab bar ─────────────────────────────────────── */
+
+.terminal-tab-bar {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--term-chrome-bg);
+  border-bottom: 1px solid var(--term-chrome-border);
+  padding: 0 12px;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.terminal-tab-bar::-webkit-scrollbar { height: 0; }
+
+.terminal-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  color: var(--term-chrome-fg);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.terminal-tab:hover {
+  color: var(--term-fg);
+}
+
+.terminal-tab--active {
+  color: var(--term-chrome-accent);
+  border-bottom-color: var(--term-chrome-accent);
+}
+
+/* ─── Terminal body ───────────────────────────────── */
+
+.terminal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 16px;
+  position: relative;
+}
+
+/* ─── Status bar ──────────────────────────────────── */
+
+.terminal-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 22px;
+  padding: 0 12px;
+  background-color: var(--term-chrome-bg);
+  border-top: 1px solid var(--term-chrome-border);
+  font-size: 11px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  color: var(--term-chrome-fg);
+  flex-shrink: 0;
+}
+
+.terminal-status-bar__section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.terminal-status-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Keyframe for status pulse ───────────────────── */
+
+@keyframes terminal-status-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}

@@ -1,0 +1,20 @@
+apiVersion: v2
+name: claude-code
+description: |
+  Claude Code Web Terminal — self-hosted deployment.
+  Runs the Bun/Express PTY server that lets browser clients
+  connect to a real Claude CLI session over WebSockets.
+type: application
+version: 0.1.0
+appVersion: "latest"
+keywords:
+  - claude
+  - anthropic
+  - ai
+  - terminal
+  - pty
+home: https://github.com/anthropics/claude-code
+sources:
+  - https://github.com/anthropics/claude-code
+maintainers:
+  - name: Anthropic
