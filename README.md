@@ -2,7 +2,7 @@
 
 ---
 
-# 🚀 Claude Code — Free & Open Setup
+# 🚀 Claude Code Leaked (2026-03-31) - Free & Open Setup on your own PC or VPS
 
 Run **Claude Code CLI** locally for **free** using [OpenRouter](https://openrouter.ai) with free AI models, or bring your own Anthropic API key for premium models like Claude Opus and Sonnet.
 
