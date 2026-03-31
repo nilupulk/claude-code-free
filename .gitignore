@@ -1,0 +1,10 @@
+node_modules/
+.env
+*.log
+proxy_start.py
+litellm_config.yaml
+anthropic-proxy.mjs
+fix-*.ps1
+patch-headers.ps1
+check-fix.ps1
+fix-version.mjs
